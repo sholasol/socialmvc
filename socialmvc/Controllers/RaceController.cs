@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using socialmvc.Data;
 using socialmvc.Interfaces;
 using socialmvc.Models;
+using socialmvc.Repository;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -30,6 +31,23 @@ namespace socialmvc.Controllers
         {
             Race race = await _raceRepository.GetByIdAsync(id);
             return View(race);
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(Race race)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(race);
+            }
+
+            _raceRepository.Add(race);
+            return RedirectToAction("Index");
         }
     }
 }

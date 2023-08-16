@@ -9,12 +9,10 @@ namespace socialmvc.Controllers
 {
 	public class ClubController : Controller
 	{
-		private readonly ApplicationDbContext _context;
         private readonly IClubRepository _clubRepository;
 
-        public ClubController(ApplicationDbContext context, IClubRepository clubRepository)
+        public ClubController(IClubRepository clubRepository)
 		{
-			_context = context;
 			_clubRepository = clubRepository;
 		}
 
@@ -29,6 +27,23 @@ namespace socialmvc.Controllers
 			Club club = await _clubRepository.GetByIdAsync(id);
 			return View(club);
 		}
-	}
+
+		public IActionResult Create()
+		{
+			return View();
+		}
+
+        [HttpPost]
+        public async Task<IActionResult> Create(Club club)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(club);
+            }
+
+            _clubRepository.Add(club);
+            return RedirectToAction("Index");
+        }
+    }
 }
 
