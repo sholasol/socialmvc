@@ -3,15 +3,23 @@ using socialmvc.Data;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using socialmvc.Interfaces;
 using socialmvc.Repository;
+using socialmvc.Helpers;
+using socialmvc.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container. 
 builder.Services.AddControllersWithViews();
 
+
+
 //add the repository and interface services
 builder.Services.AddScoped<IClubRepository, ClubRepository>();
 builder.Services.AddScoped<IRaceRepository, RaceRepository>();
+builder.Services.AddScoped<IPhotoService, PhotoService>();
+
+//cloudinary
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
 
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
