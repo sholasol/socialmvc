@@ -9,7 +9,9 @@ namespace socialmvc.Interfaces
 
 		Task<Club> GetByIdAsync(int id);
 
-		Task<IEnumerable<Club>> GetClubByCity(string city);
+        Task<Club> GetByIdAsyncNoTracking(int id);
+
+        Task<IEnumerable<Club>> GetClubByCity(string city);
 
 		bool Add(Club club);
 

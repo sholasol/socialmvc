@@ -2,7 +2,8 @@
 
 @using socialmvc.ViewModel
 
-@model CreateRaceViewModel 
+@model EditRaceViewModel
+
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -23,9 +24,9 @@
                         <a href="">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <router-link href="">Race</router-link>
+                        <router-link href="">Edit Race</router-link>
                     </li>
-                    <li class="breadcrumb-item active">Create</li>
+                    <li class="breadcrumb-item active">Edit</li>
                 </ol>
             </div>
         </div>
@@ -39,6 +40,7 @@
                 <div class="card">
                     <div class="card-body">
                         <form method="post" asp-action="Create" enctype="multipart/form-data">
+                            <input type="hidden" value="AddressId" id="AddressId"/>
                             <div class="row">
                                 <div class="col-md-6 mb-2">
                                     <div class="form-group">
