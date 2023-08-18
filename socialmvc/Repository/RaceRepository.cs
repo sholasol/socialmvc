@@ -6,9 +6,10 @@ using socialmvc.Models;
 
 namespace socialmvc.Repository
 {
-	public class RaceRepository :IRaceRepository
+	public class RaceRepository : IRaceRepository
 	{
 		private readonly ApplicationDbContext _context;
+
 		public RaceRepository(ApplicationDbContext context)
 		{
 			_context = context;
@@ -36,7 +37,17 @@ namespace socialmvc.Repository
             return await _context.Races.Include(i => i.Address).FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<IEnumerable<Race>> GetAllRacesByCity(string city)
+        public async Task<Race> GetByIdAsyncNoTracking(int id)
+        {
+            return await _context.Races.Include(i => i.Address).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        //public async Task<IEnumerable<Race>> GetAllRacesByCity(string city)
+        //{
+        //    return await _context.Races.Where(c => c.Address.City.Contains(city)).ToListAsync();
+        //}
+
+        public async Task<IEnumerable<Race>> GetRaceByCity(string city)
         {
             return await _context.Races.Where(c => c.Address.City.Contains(city)).ToListAsync();
         }
@@ -44,7 +55,7 @@ namespace socialmvc.Repository
         public bool Save()
         {
             var saved = _context.SaveChanges();
-            return saved > 0 ? true : false;
+            return saved > 0;
         }
 
         public bool Update(Race race)
@@ -53,6 +64,7 @@ namespace socialmvc.Repository
             return Save();
         }
 
+        
     }
 }
 

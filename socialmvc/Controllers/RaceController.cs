@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using socialmvc.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using socialmvc.Interfaces;
 using socialmvc.Models;
 using socialmvc.Repository;
@@ -95,52 +89,72 @@ namespace socialmvc.Controllers
 
 
 
-        //[HttpPost]
-        //public async Task<IActionResult> Edit(int id, EditClubViewModel clubVM)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        ModelState.AddModelError("", "Failed to edit club");
-        //        return View("Edit", clubVM);
-        //    }
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, EditRaceViewModel raceVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Failed to edit race");
+                return View("Edit", raceVM);
+            }
 
-        //    var userClub = await _clubRepository.GetByIdAsyncNoTracking(id);
+            var userRace = await _raceRepository.GetByIdAsyncNoTracking(id);
 
-        //    if (userClub != null)
-        //    {
-        //        try
-        //        {
-        //            //delete previous image
-        //            await _photoService.DeletePhotoAsync(userClub.Image);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            ModelState.AddModelError("", "Could not delete image");
-        //            return View(clubVM);
-        //        }
+            if (userRace != null)
+            {
+                try
+                {
+                    //delete previous image
+                    await _photoService.DeletePhotoAsync(userRace.Image);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Could not delete image");
+                    return View(raceVM);
+                }
 
-        //        var photoResul = await _photoService.AddPhotoAsync(clubVM.Image);
+                var photoResult = await _photoService.AddPhotoAsync(raceVM.Image);
 
-        //        var club = new Club
-        //        {
-        //            Id = id,
-        //            Title = clubVM.Title,
-        //            Description = clubVM.Description,
-        //            Image = photoResul.Url.ToString(),
-        //            AddressId = clubVM.AddressId,
-        //            Address = clubVM.Address
-        //        };
+                var race = new Race
+                {
+                    Id = id,
+                    Title = raceVM.Title,
+                    Description = raceVM.Description,
+                    Image = photoResult.Url.ToString(),
+                    AddressId = raceVM.AddressId,
+                    Address = raceVM.Address
+                };
 
-        //        _clubRepository.Update(club);
+                _raceRepository.Update(race);
 
-        //        return RedirectToAction("Index");
-        //    }
-        //    else
-        //    {
-        //        return View(clubVM);
-        //    }
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View(raceVM);
+            }
 
-        //}
+        }
+
+
+        //delete
+        public async Task<IActionResult> Delete(int id)
+        {
+            var raceDetails = await _raceRepository.GetByIdAsync(id);
+            if (raceDetails == null) return View("Error");
+            return View(raceDetails);
+        }
+
+        [HttpPost, ActionName("Delete")]
+
+        public async Task<IActionResult> DeleteRace(int id)
+        {
+            var raceDetails = await _raceRepository.GetByIdAsync(id);
+            if (raceDetails == null) return View("Error");
+
+            _raceRepository.Delete(raceDetails);
+            return RedirectToAction("Index");
+        }
 
 
 
